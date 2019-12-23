@@ -11,6 +11,9 @@ import java.net.*;
 
 public class JoodClient{
     public Jood core;
+    private DataOutputStream out = null;
+	private DataInputStream in = null;
+    
     public Jood Core() {
         return null;
     }
@@ -19,22 +22,36 @@ public class JoodClient{
 //        this.core = new Jood();
 //    }
 
-    public void Init() throws InitException {
-        this.core = new Jood();
+    public void Init(DataOutputStream out, DataInputStream in) throws InitException {
+    	this.out = out;
+        this.in = in;
+        this.core = new Jood(this.out, this.in);
     }
     
-    public void Run(DataOutputStream out) {
+    public String listen()throws IOException{
+		String temp = this.in.readUTF();
+		return temp;
+	}
+
+	public void say(String words)throws IOException{
+//		System.out.println(words);
+		this.out.writeUTF(words);
+		this.out.flush();
+	}
+
+    
+    public void Run()throws IOException {
         String whitePlayer, blackPlayer;
-        Scanner scan = new Scanner(System.in);
+//        Scanner scan = new Scanner(System.in);
 
-	   	System.out.printf("Enter name of user1 as white player:");
-        whitePlayer = scan.nextLine();
-        System.out.printf("Enter name of user2 as black player:");
-        blackPlayer = scan.nextLine();
+	   	this.say("Enter name of user1 as white player:");
+        whitePlayer = this.listen();
+        this.say("Enter name of user2 as black player:");
+        blackPlayer = this.listen();
 
-        System.out.printf("Enter \"Startgame\" to start a new game or" +
+        this.say("Enter \"Startgame\" to start a new game or" +
              "\"LoadBoard\" to load from file:");
-        String t_start = scan.next();
+        String t_start = this.listen();
         boolean isWhitePlayerTurn = true;
         if(t_start.compareTo("LoadBoard") == 0){
             try {
@@ -51,14 +68,14 @@ public class JoodClient{
         String action;
         while(true){
             if(isWhitePlayerTurn){
-                System.out.printf("Enter the action of white player:");
+            	this.say("Enter the action of white player:");
             }
             else{
-                System.out.printf("Enter the action of black player:");
+            	this.say("Enter the action of black player:");
             }
             Chessboard.Color player = isWhitePlayerTurn ? Chessboard.Color.White : Chessboard.Color.Black;
 
-            action = scan.nextLine();
+            action = this.listen();
 
             if(action.length() == 5){
                 String t_from = action.substring(0, 2);
@@ -67,24 +84,24 @@ public class JoodClient{
 
                 boolean ifSucceed = core.move(t_from, t_to, player);
                 if(!ifSucceed){
-                    System.out.println("Invalid");
+                	this.say("Invalid\n");
                     continue;
                 }
                 core.printChessboard();
                 isWhitePlayerTurn = !isWhitePlayerTurn;
                 if(core.gameOver() == 1) {
-                	System.out.println("the winner is white player.");
+                	this.say("the winner is white player.\n");
                 	return;
                 }
                 else if(core.gameOver() == -1) {
-                	System.out.println("the winner is black player.");
+                	this.say("the winner is black player.\n");
                 	return;
                 }
             }
             else if(action.compareTo("Undo") == 0){
                 boolean ifSucceed = core.undo(player);
                 if(!ifSucceed){
-                    System.out.println("Invalid");
+                	this.say("Invalid\n");
                     continue;
                 }
                 core.printChessboard();

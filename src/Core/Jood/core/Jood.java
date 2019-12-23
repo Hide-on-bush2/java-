@@ -1,27 +1,37 @@
 package Core.Jood.core;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.OutputStream;
+//import java.io.FileOutputStream;
+//import java.io.IOException;
+//import java.io.InputStream;
+//import java.io.FileInputStream;
+//import java.io.FileNotFoundException;
+//import java.io.OutputStream;
+
+import java.util.Scanner;
+import java.io.*;
+import java.net.*;
 
 public class Jood {
 	private Player whitePlayer;
 	private Player blackPlayer;
 
 	private Chessboard m_chessboard;
+	
 
 	private int whiteUndoTime;
 	private int blackUndoTime;
+	
+	private DataOutputStream out = null;
+	private DataInputStream in = null;
 
 	
 
-	public Jood(){
+	public Jood(DataOutputStream out, DataInputStream in){
+		this.out = out;
+		this.in = in;
 		whitePlayer = null;
 		blackPlayer = null;
-		m_chessboard = new Chessboard();
+		m_chessboard = new Chessboard(this.out, this.in);
 		whiteUndoTime = 0;
 		blackUndoTime = 0;
 	}
@@ -57,7 +67,7 @@ public class Jood {
 		return Character.isDigit(pos.charAt(0)) && Character.isDigit(pos.charAt(1));
 	}
 
-	public boolean move(String from, String to, Chessboard.Color t_color){
+	public boolean move(String from, String to, Chessboard.Color t_color) throws IOException{
 		if(!(isValid(from) && isValid(to))){
 			return false;
 		}
@@ -70,7 +80,7 @@ public class Jood {
 		return m_chessboard.move(t_from, t_to, t_color);
 	}
 
-	public boolean undo(Chessboard.Color player){
+	public boolean undo(Chessboard.Color player) throws IOException{
 		if(player == Chessboard.Color.Black){
 			if(blackUndoTime > 0){
 				return false;
@@ -86,7 +96,7 @@ public class Jood {
 	}
 	
 	
-	public void printChessboard(){
+	public void printChessboard() throws IOException{
 		m_chessboard.printBoard();
 	}
 	

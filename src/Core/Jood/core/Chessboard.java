@@ -2,7 +2,9 @@ package Core.Jood.core;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
+
+import java.io.*;
+import java.net.*;
 
 import Core.Jood.core.Chessman.Status;
 import Core.Jood.core.chessmen.King;
@@ -12,6 +14,9 @@ import Core.Jood.core.chessmen.Rook;
 public class Chessboard {
     public static final int ROW = 8;
     public static final int COL = 8;
+    private DataOutputStream out = null;
+	private DataInputStream in = null;
+    
     
     //两个list分别用来存储黑棋和白棋
     private List<Chessman> white_chess;
@@ -22,6 +27,7 @@ public class Chessboard {
 
     //棋盘地图
     private int[][] map = new int [ROW + 1][COL + 1];
+    
     
     //颜色
     public enum Color {
@@ -38,7 +44,10 @@ public class Chessboard {
      * Construactor of the Chessboard which sets the ChessBoard
      */
     //初始化棋盘
-    public Chessboard() {
+    public Chessboard(DataOutputStream out, DataInputStream in) {
+    	this.out = out;
+    	this.in = in;
+    	
         white_chess = new ArrayList<Chessman>();
         black_chess = new ArrayList<Chessman>();
         
@@ -141,16 +150,29 @@ public class Chessboard {
 
         m_logs = new Logs();
     }
+    
+    
+    public String listen()throws IOException{
+		String temp = this.in.readUTF();
+		return temp;
+	}
+
+	public void say(String words)throws IOException{
+//		System.out.println(words);
+		this.out.writeUTF(words);
+		this.out.flush();
+	}
+
 
     /**
      * can not perform two or more consecutive undo
      * @return 
      */
     //撤销对手的一步棋
-    public boolean undo() {
+    public boolean undo()throws IOException {
     	//如果日志为空，返回错误
         if(m_logs.isEmpty()){
-        	System.out.println("the last step not exit!!");
+        	this.say("the last step not exit!!\n");
             return false;
         }
         //从日志中取出最近的一步棋，将棋子归位
@@ -184,13 +206,14 @@ public class Chessboard {
      * @param from
      * @param to
      * @return
+     * @throws IOException 
      */
-    public boolean move(Position from, Position to, Chessboard.Color t_color) {
+    public boolean move(Position from, Position to, Chessboard.Color t_color) throws IOException {
     	//如果from和to的位置不对，返回false
         if(!from.valid() || !to.valid()){return false;}
         int chessId = map[from.getRow()][from.getCol()];
         if(chessId == 0){
-        	System.out.println("the place has no chess!!");
+        	this.say("the place has no chess!!\n");
             return false;
         }
         Chessman t_chess;
@@ -201,22 +224,22 @@ public class Chessboard {
         if(chessId > 0){
             t_chess = white_chess.get(chessId);
             if(t_color == Color.Black){
-            	System.out.println("It's not your turn!!");
+            	this.say("It's not your turn!!\n");
                 return false;
             }
             if(t_chess.status() != Status.King && toChessId > 0) {
-            	System.out.println("You can not eat your chess!!");
+            	this.say("You can not eat your chess!!\n");
         		return false;
             }
         }
         else{
             t_chess = black_chess.get(-chessId);
             if(t_color == Color.White){
-            	System.out.println("It's not your turn!!");            	
+            	this.say("It's not your turn!!\n");            	
                 return false;
             }
             if(t_chess.status() != Status.King && toChessId < 0) {
-            	System.out.println("You can not eat your chess!!");
+            	this.say("You can not eat your chess!!\n");
         		return false;
             }
         }
@@ -235,7 +258,7 @@ public class Chessboard {
         if(t_chess.status() == Chessman.Status.Pawn) {
         	//棋子是兵
         	if(!t_chess.canGo(to)){
-            	System.out.println("You can not go here!!");        	
+        		this.say("You can not go here!!\n");        	
                 return false;
             }
        
@@ -243,17 +266,17 @@ public class Chessboard {
         		//第一次移动可以直走两步的情况
         		if(!canCross(to, t_chess)) {
         			//直走两步不能越子
-        			System.out.println("The chess can not go cross the other chesses!!");        	
+        			this.say("The chess can not go cross the other chesses!!\n");        	
         			return false;
         		}
         		if(from.getCol() != to.getCol()) {
         			//直走两步不能斜着走
-        			System.out.println("The  fist move can't go bias!!");
+        			this.say("The  fist move can't go bias!!\n");
         			return false;
         		}
         		if(map[to.getRow()][to.getCol()] != 0) {
         			//直走不可以吃子
-        			System.out.println("can not eat when going straight!!");
+        			this.say("can not eat when going straight!!\n");
         			return false;
         		}
         		canEatPassByPawn = true;//之后的一步可以吃过路兵，延迟无效
@@ -264,7 +287,7 @@ public class Chessboard {
         		if(from.getCol() == to.getCol()) {
         			//直走不吃子
         			if(map[to.getRow()][to.getCol()] != 0) {
-            			System.out.println("can not eat when going straight!!");
+        				this.say("can not eat when going straight!!\n");
             			return false;
         			}
         		}
@@ -297,7 +320,7 @@ public class Chessboard {
         			else if(map[to.getRow()][to.getCol()] == 0) {
         				
         				//斜吃
-        				System.out.println("can not go bias when do not to eat chess!!");
+        				this.say("can not go bias when do not to eat chess!!\n");
         				return false;
         			}
         			
@@ -318,13 +341,13 @@ public class Chessboard {
         	
         	//是否延斜线走
         	if(!t_chess.canGo(to)){
-        		System.out.println("You can not go here!!");        	
+        		this.say("You can not go here!!\n");        	
         		return false;
         	}
         	
         	//不能越子
         	if(!canCross(to, t_chess)){
-        		System.out.println("The chess can not go cross the other chesses!!");        	
+        		this.say("The chess can not go cross the other chesses!!\n");        	
         		return false;
         	}
         }
@@ -339,7 +362,7 @@ public class Chessboard {
         		
         		//如果车和王都没移动过
         		if(((King)t_chess).hasMoved() || ((Rook)tempChess).hasMoved()) {
-        			System.out.println("the king or rook have been moved, can not be replaced!!");
+        			this.say("the king or rook have been moved, can not be replaced!!\n");
         			return false;
         		}
         		
@@ -351,7 +374,7 @@ public class Chessboard {
         		if(kCol > rCol) {
         			for(int i = rCol + 1;i < kCol;i++) {
         				if(map[tempRow][i] != 0) {
-        					System.out.println("there are chesses exit between king and rook!!");
+        					this.say("there are chesses exit between king and rook!!\n");
         					return false;
         				}
         			}
@@ -359,7 +382,7 @@ public class Chessboard {
         		else {
         			for(int i = kCol + 1;i < rCol;i++) {
         				if(map[tempRow][i] != 0) {
-        					System.out.println("there are chesses exit between king and rook!!");
+        					this.say("there are chesses exit between king and rook!!\n");
         					return false;
         				}
         			}
@@ -374,13 +397,13 @@ public class Chessboard {
         	else if((map[to.getRow()][to.getCol()] > 0 && t_color == Color.White) || map[to.getRow()][to.getCol()] < 0 && t_color == Color.Black) {
         		
         		//不是车王移位的时候不能吃自己的棋子
-        		System.out.println("You can not eat your chessss!!");
+        		this.say("You can not eat your chessss!!\n");
         		return false;
         	}
         	else if(!t_chess.canGo(to)){
         		
         		//不是车王移位的时候按照正常走法
-        		System.out.println("You can not go here!!");        	
+        		this.say("You can not go here!!\n");        	
         		return false;
         	}
         }
@@ -388,7 +411,7 @@ public class Chessboard {
         	//骑士（马）
         	canEatPassByPawn = false;
         	if(!t_chess.canGo(to)){
-        		System.out.println("You can not go here!!");        	
+        		this.say("You can not go here!!\n");        	
         		return false;
         	}
         }
@@ -396,11 +419,11 @@ public class Chessboard {
         	//王后
         	canEatPassByPawn = false;
         	if(!t_chess.canGo(to)){
-        		System.out.println("You can not go here!!");        	
+        		this.say("You can not go here!!\n");        	
         		return false;
         	}
         	if(!canCross(to, t_chess)){
-        		System.out.println("The chess can not go cross the other chesses!!");        	
+        		this.say("The chess can not go cross the other chesses!!\n");        	
         		return false;
         	}
         	
@@ -409,11 +432,11 @@ public class Chessboard {
         	//车
         	canEatPassByPawn = false;
         	if(!t_chess.canGo(to)){
-        		System.out.println("You can not go here!!");        	
+        		this.say("You can not go here!!\n");        	
         		return false;
         	}
         	if(!canCross(to, t_chess)){
-        		System.out.println("The chess can not go cross the other chesses!!");        	
+        		this.say("The chess can not go cross the other chesses!!\n");        	
         		return false;
         	}
         }
@@ -444,14 +467,14 @@ public class Chessboard {
         
       //晋升判断
     	if((t_chess.status() == Status.Pawn && t_color == Color.White && to.getRow() == 1) || (t_color == Color.Black && to.getRow() == 8)) {
-    		System.out.printf("Now the pawn can promote, do you want to promote him?<Y> or <N>:");
-    		Scanner scan = new Scanner(System.in);
-    		String res = scan.nextLine();
+    		this.say("Now the pawn can promote, do you want to promote him?<Y> or <N>:");
+//    		Scanner scan = new Scanner(System.in);
+    		String res = this.listen();
     		
     		if(res.compareTo("Y") == 0) {
         		while(true) {
-        			System.out.printf("Whitch one do you promote to ?\n<Queen>\n<Bishop>\n<Rook>\n<Knight>\n");
-            		String typeOfChess = scan.nextLine();
+        			this.say("Whitch one do you promote to ?\n<Queen>\n<Bishop>\n<Rook>\n<Knight>\n");
+            		String typeOfChess = this.listen();
             		if(typeOfChess.compareTo("Queen") == 0) {
             			promote(t_chess, Status.Queen);
             			break;
@@ -543,75 +566,81 @@ public class Chessboard {
 
     /**
     * print the chessboard
+     * @throws IOException 
     */
 
-    public void printBoard(){
+    public void printBoard() throws IOException{
     	//打印一个棋盘
         for(int i = 9;i >= 1;i--){
             if(i == 9){
-                System.out.printf("   ");
+//            	System.out.println(1);
+            	this.say("   ");
+//            	System.out.println(2);
                 for(int j = 1;j <= 8;j++){
-                    System.out.printf("%d  ", j);
+//                	String tmp = j + "";
+//                	System.out.println(1);
+                	this.say(j + "" + "  ");
+//                	System.out.println(2);
                 }
-                System.out.println();
+                this.say("\n");
                 continue;
             }
-            System.out.printf("%d  ", i);
+            this.say(i + "" + "  ");
             for(int j = 1;j <= 8;j++){
                 int chessId = map[i][j];
                 if(chessId == 0){
-                    System.out.printf("   ");
+                	this.say("   ");
                 }
                 else if(chessId > 0){
                     Chessman t_chess = white_chess.get(chessId);
                     if(t_chess.status() == Status.Pawn){
-                        System.out.printf("6P ");
+                    	this.say("6P ");
                     }
                     else if(t_chess.status() == Status.Rook){
-                        System.out.printf("3R ");
+                    	this.say("3R ");
                     }
                     else if(t_chess.status() == Status.Knight){
-                        System.out.printf("5N ");
+                    	this.say("5N ");
                     }
                     else if(t_chess.status() == Status.Bishop){
-                        System.out.printf("4B ");
+                    	this.say("4B ");
                     }
                     else if(t_chess.status() == Status.Queen){
-                        System.out.printf("2Q ");
+                    	this.say("2Q ");
                     }
                     else if(t_chess.status() == Status.King){
-                        System.out.printf("1K ");
+                    	this.say("1K ");
                     }
                     else{
-                        System.out.printf("   ");
+                    	this.say("   ");
                     }
                 }
                 else{
                     Chessman t_chess = white_chess.get(- chessId);
                     if(t_chess.status() == Status.Pawn){
-                        System.out.printf("P6 ");
+                    	this.say("P6 ");
                     }
                     else if(t_chess.status() == Status.Rook){
-                        System.out.printf("R3 ");
+                    	this.say("R3 ");
                     }
                     else if(t_chess.status() == Status.Knight){
-                        System.out.printf("N5 ");
+                    	this.say("N5 ");
                     }
                     else if(t_chess.status() == Status.Bishop){
-                        System.out.printf("B4 ");
+                    	this.say("B4 ");
                     }
                     else if(t_chess.status() == Status.Queen){
-                        System.out.printf("Q2 ");
+                    	this.say("Q2 ");
                     }
                     else if(t_chess.status() == Status.King){
-                        System.out.printf("K1 ");
+                    	this.say("K1 ");
                     }
                     else{
-                        System.out.printf("   ");
+                    	this.say("   ");
                     }   
                 }
             }
-            System.out.println();
+            this.say("\n");
         }
     }
 

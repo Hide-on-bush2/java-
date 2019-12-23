@@ -51,7 +51,7 @@ public class Server {
 				this.in = new DataInputStream(inFromClient);
 				this.outToClient = this.client.getOutputStream();
 				this.out = new DataOutputStream(outToClient);
-				m_robot = new Robot(t_name, this.out);
+				m_robot = new Robot(t_name, this.out, this.in);
 			}
 			catch(IOException e){
 				e.printStackTrace();
@@ -85,6 +85,18 @@ public class Server {
 			catch(IOException e){
 				e.printStackTrace();
 			}
+		}
+	}
+	
+	public static void main(String[] args){
+//		int port = Integer.parseInt(args[0]);
+		int port = 8080;
+		try{
+			Server t = new Server();
+			t.startServer(port, "faker");
+		}
+		catch(IOException e){
+			e.printStackTrace();
 		}
 	}
 }

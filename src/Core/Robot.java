@@ -12,10 +12,12 @@ import java.io.*;
 public class Robot{
 	private String m_name;
 	private DataOutputStream out = null;
+	private DataInputStream in = null;
 
-	public Robot(String t_name, DataOutputStream out){
+	public Robot(String t_name, DataOutputStream out, DataInputStream in){
 		this.m_name = t_name;
 		this.out = out;
+		this.in = in;
 	}
 	
 //	public void setDataOutputStrean(DataOutputStream out) {
@@ -26,37 +28,35 @@ public class Robot{
 		return this.m_name;
 	}
 
-	public String listen(){
-		Scanner sc = new Scanner(System.in);
-
-		String res = sc.next();
-
-		return res;
+	public String listen()throws IOException{
+		String temp = this.in.readUTF();
+		return temp;
 	}
 
-	public String say(String words){
+	public void say(String words)throws IOException{
 //		System.out.println(words);
-		return words;
+		this.out.writeUTF(words);
+		this.out.flush();
 	}
 
-	public void execute(String request){
+	public void execute(String request)throws IOException{
 		if(request.equals("/FEater")){
 			FEaterStart FES = new FEaterStart();
-			FES.Run(this.out);
+			FES.Run(this.out, this.in);
 		}
 		else if(request.equals("/Chess")){
 			JoodClient jood = new JoodClient();
 			try {
-				jood.Init();
+				jood.Init(this.out, this.in);
 			} catch (InitException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			jood.Run(this.out);
+			jood.Run();
 		}
 		else if(false){}
 		else{
-			this.say("I am sorry, but I can't understand what you have said...");
+			this.say("I am sorry, but I can't understand what you have said...\n");
 		}	
 	}
 }
