@@ -1,6 +1,9 @@
 package Core.FEater.rule;
 
-import java.util.Scanner;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+//import java.util.Scanner;
 
 import Core.FEater.fEaterLevels.*;
 import Core.FEater.obj.*;
@@ -8,11 +11,32 @@ import Core.FEater.obj.*;
 public class FEater {
 	static int score = 0;
 	static int step = 5;
-	private static Scanner sc;
+//	private static Scanner sc;
 	base[][] map = new base[10][10];
 	
-	public void play(int level) {
-		sc = new Scanner(System.in);
+	private DataOutputStream out = null;
+	private DataInputStream in = null;
+	
+	public FEater(DataOutputStream out, DataInputStream in) {
+		this.out = out;
+		this.in = in;
+	}
+	
+	
+	public String listen()throws IOException{
+		String temp = this.in.readUTF();
+		return temp;
+	}
+
+	public void say(String words)throws IOException{
+//		System.out.println(words);
+		this.out.writeUTF(words);
+		this.out.flush();
+	}
+
+	
+	public void play(int level) throws IOException {
+//		sc = new Scanner(System.in);
 		player you = new player(0,0);
 		
 		switch(level) {
@@ -23,7 +47,7 @@ public class FEater {
 		while(step>=0) {
 			show();
 			
-			String key = sc.nextLine();
+			String key = this.listen();
 			
 			if(key.equals("q")) {
 				break;
@@ -49,15 +73,15 @@ public class FEater {
 		}
 		return;
 	}
-	public void show() {
+	public void show() throws IOException {
 		for(int i=0;i<10;i++) {
 			for(int j=0;j<10;j++) {
-				System.out.print(map[i][j].draw());
+				this.say(map[i][j].draw());
 			}
-			System.out.println();
+			this.say("\n");
 		}
-		System.out.println("SCORE: " + score);
-		System.out.println("STEP: " + step);
+		this.say("SCORE: " + score + "\n");
+		this.say("STEP: " + step + "\n");
 	}
 	public player move(player you,int x,int y) {
 		map[you.getX()][you.getY()] = new base(you.getX(),you.getY());

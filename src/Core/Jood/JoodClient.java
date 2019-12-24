@@ -44,13 +44,13 @@ public class JoodClient{
         String whitePlayer, blackPlayer;
 //        Scanner scan = new Scanner(System.in);
 
-	   	this.say("Enter name of user1 as white player:");
+	   	this.say("Enter name of user1 as white player:\n");
         whitePlayer = this.listen();
-        this.say("Enter name of user2 as black player:");
+        this.say("Enter name of user2 as black player:\n");
         blackPlayer = this.listen();
 
         this.say("Enter \"Startgame\" to start a new game or" +
-             "\"LoadBoard\" to load from file:");
+             "\"LoadBoard\" to load from file:\n");
         String t_start = this.listen();
         boolean isWhitePlayerTurn = true;
         if(t_start.compareTo("LoadBoard") == 0){
@@ -68,10 +68,10 @@ public class JoodClient{
         String action;
         while(true){
             if(isWhitePlayerTurn){
-            	this.say("Enter the action of white player:");
+            	this.say("Enter the action of white player:\n");
             }
             else{
-            	this.say("Enter the action of black player:");
+            	this.say("Enter the action of black player:\n");
             }
             Chessboard.Color player = isWhitePlayerTurn ? Chessboard.Color.White : Chessboard.Color.Black;
 

@@ -50,7 +50,7 @@ public class FEaterStart {
 		
 		this.say("Welcome to FEater friend! please enter the level you want to challenge!");
 		int level = Integer.parseInt(this.listen());
-		FEater game = new FEater();
+		FEater game = new FEater(this.out, this.in);
 		
 		this.say("Loading...Remember 'q' is used to quit~ Enter any key to cotinue...");
 		temp = this.listen();
