@@ -67,7 +67,7 @@ public class LetterImage {
 	}
 	public void run() {
 		try {
-			this.say("please input the number of letter\n");
+			
 			int n=Integer.parseInt(this.listen());
 			int m=(n+1)>>1;
 			String s=this.listen();
