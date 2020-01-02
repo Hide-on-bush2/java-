@@ -48,15 +48,24 @@ public class FEaterStart {
 		this.out = out;
 		this.in = in;
 		
-		this.say("Welcome to FEater friend! please enter the level you want to challenge!");
+		
+		this.say("Welcome to FEater friend!" + "\n");
+		this.say("W:move up" + "\n");
+		this.say("A:move left" + "\n");
+		this.say("S:move down" + "\n");
+		this.say("D:move right" + "\n");
+		this.say("Q:i quit!" + "\n");
+		this.say("Attention! there `s STEP LIMIT for you, and you can get 5 more STEP and 1 score when you get a F" + "\n");
+		this.say("please enter the level you want to challenge!" + "\n");
+		
 		int level = Integer.parseInt(this.listen());
 		FEater game = new FEater(this.out, this.in);
 		
-		this.say("Loading...Remember 'q' is used to quit~ Enter any key to cotinue...");
+		this.say("Loading...Remember 'q' is used to quit~ Enter any key to cotinue..." + "\n");
 		temp = this.listen();
 		game.play(level);
 		
-		this.say("Nice joy time, isn`t it?");
+		this.say("Nice joy time, isn`t it?\n");
 		temp = this.listen();
 		return;
 	}

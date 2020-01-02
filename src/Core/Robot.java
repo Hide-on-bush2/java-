@@ -3,6 +3,9 @@ package Core;
 import Core.FEater.*;
 import Core.Jood.*;
 import Core.Jood.gui.InitException;
+import Core.Image.*;
+import Core.Chemistry.*;
+import Core.PhysicsResistanceNetwork.*;
 
 import java.util.*;
 import java.net.*;
@@ -42,7 +45,9 @@ public class Robot{
 	public void execute(String request)throws IOException{
 		if(request.equals("/FEater")){
 			FEaterStart FES = new FEaterStart();
+			this.say("Welcome to NumberImage.\n");
 			FES.Run(this.out, this.in);
+			this.say("you have quitd FEater.\n");
 		}
 		else if(request.equals("/Chess")){
 			JoodClient jood = new JoodClient();
@@ -52,9 +57,45 @@ public class Robot{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			this.say("Welcome to Chess.\n");
 			jood.Run();
+			this.say("you have quitd Chess.\n");
 		}
-		else if(false){}
+		else if(request.equals("/LetterImage")){
+			LetterImage LI = new LetterImage(this.out, this.in);
+			this.say("Welcome to LetterImage.\n");
+			LI.run();
+			this.say("you have quitd LetterImage.\n");
+		}
+		else if(request.equals("/NumberImage")) {
+			NumberImage NI = new NumberImage(this.out, this.in);
+			NI.run();
+			this.say("you have quitd NumberImage.\n");
+		}
+		else if(request.equals("/Stereogram")) {
+			Stereogram S = new Stereogram(this.out, this.in);
+			this.say("Welcome to Stereogram.\n");
+			S.run();
+			this.say("you have quitd Stereogram.\n");
+		}
+		else if(request.equals("/Triangle")) {
+			Triangle T = new Triangle(this.out, this.in);
+			this.say("Welcome to Triangle.\n");
+			T.run();
+			this.say("you have quitd Triangle.\n");
+		}
+		else if(request.equals("/ChemistryCheck")) {
+			ChemistryEquationCheck CEC = new ChemistryEquationCheck(this.out, this.in);
+			this.say("Welcome to ChemistryCheck.\n");
+			CEC.run();
+			this.say("you have quitd ChemistryCheck.\n");
+		}
+		else if(request.equals("/PRNetwork")) {
+			PhysicsResistanceNetwork PRN = new PhysicsResistanceNetwork(this.out, this.in);
+			this.say("Welcome to PRNetwork.\n");
+			PRN.run();
+			this.say("you have quitd PRNetwork.\n");
+		}
 		else{
 			this.say("I am sorry, but I can't understand what you have said...\n");
 		}	

@@ -93,7 +93,7 @@ public class Server {
 		int port = 8080;
 		try{
 			Server t = new Server();
-			t.startServer(port, "faker");
+			t.startServer(port, "ptilopsis");
 		}
 		catch(IOException e){
 			e.printStackTrace();
