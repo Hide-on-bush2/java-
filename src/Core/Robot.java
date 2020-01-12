@@ -6,6 +6,8 @@ import Core.Jood.gui.InitException;
 import Core.Image.*;
 import Core.Chemistry.*;
 import Core.PhysicsResistanceNetwork.*;
+import Core.irregularPuzzle.*;
+import Core.puzzle.*;
 
 import java.util.*;
 import java.net.*;
@@ -95,6 +97,23 @@ public class Robot{
 			this.say("Welcome to PRNetwork.\n");
 			PRN.run();
 			this.say("you have quitd PRNetwork.\n");
+		}
+		else if(request.equals("/IrregularPuzzle")) {
+			IrregularPuzzle IP = new IrregularPuzzle(this.out, this.in); 
+			this.say("Welcome to IrregularPuzzle.\n");
+			IP.run();
+			this.say("you have quitd IrregularPuzzle.\n");
+		}
+		else if(request.equals("/IrregularPuzzleRotate")) {
+			IrregularPuzzle IP = new IrregularPuzzleRotate(this.out, this.in); 
+			this.say("Welcome to IrregularPuzzleRotate.\n");
+			IP.run();
+			this.say("you have quitd IrregularPuzzleRotate.\n");
+		}
+		else if(request.equals("/Puzzle")){
+			this.say("Welcome to Puzzle.\n");
+			PuzzleFrame PF = new PuzzleFrame();
+			this.say("you have quitd Puzzle.\n");
 		}
 		else{
 			this.say("I am sorry, but I can't understand what you have said...\n");

@@ -57,6 +57,9 @@ public class gui extends JFrame{
 				"\t</Triangle>: draw a triangle, \n" +
 				"\t</ChemistryCheck>: determine if the chemical equation is balanced, \n" +
 				"\t</PRNetwork>: draw a physics resistance network, \n" + 
+				"\t</Puzzle>: ...\n" + 
+				"\t<IrregularPuzzle>: ...\n" + 
+				"\t<IrregularPuzzleRotate>: ...\n" + 
 				"So what can I do for you?\n";
 				
 		JTextArea server_content = new JTextArea(init_word, 25, 100);
