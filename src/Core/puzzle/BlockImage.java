@@ -1,5 +1,4 @@
 package Core.puzzle;
-
 import java.awt.*;
 import javax.swing.*;
 

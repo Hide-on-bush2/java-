@@ -6,7 +6,7 @@ import java.awt.*;
 public class PuzzleRadioBox extends JPanel{
 	ButtonGroup bg;
 	private PuzzleFrame pf;
-	JRadioButton jrb1,jrb2,jrb3,jrb4,jrb5,jrb6,jrb7,jrb8,jrb9,jrb10,jrb11;
+	JRadioButton jrb1,jrb2,jrb3,jrb4,jrb5,jrb6,jrb7,jrb8,jrb9,jrb10,jrb11,jrb12,jrb13,jrb14,jrb15,jrb16;
 	PuzzleRadioBox(PuzzleFrame _pf){
 		pf=_pf;
 		bg=new ButtonGroup();
@@ -31,7 +31,12 @@ public class PuzzleRadioBox extends JPanel{
 		jrb9=new JRadioButton("4x4");//jrb9=new JRadioButton("5x4");//jrb9.setEnabled(false);
 		jrb10=new JRadioButton("2x5");
 		jrb11=new JRadioButton("3x5");
-		setLayout(new GridLayout(11,1));
+		jrb12=new JRadioButton("4x5");
+		jrb13=new JRadioButton("5x5");
+		jrb14=new JRadioButton("2x6");
+		jrb15=new JRadioButton("3x6");
+		jrb16=new JRadioButton("2x7");
+		setLayout(new GridLayout(16,1));
 		bg.add(jrb1);
 		bg.add(jrb2);
 		bg.add(jrb3);
@@ -43,6 +48,11 @@ public class PuzzleRadioBox extends JPanel{
 		bg.add(jrb9);
 		bg.add(jrb10);
 		bg.add(jrb11);
+		bg.add(jrb12);
+		bg.add(jrb13);
+		bg.add(jrb14);
+		bg.add(jrb15);
+		bg.add(jrb16);
 		add(jrb1);
 		add(jrb2);
 		add(jrb3);
@@ -54,6 +64,11 @@ public class PuzzleRadioBox extends JPanel{
 		add(jrb9);
 		add(jrb10);
 		add(jrb11);
+		add(jrb12);
+		add(jrb13);
+		add(jrb14);
+		add(jrb15);
+		add(jrb16);
 		
 //		jrb6.setSelected(true);
 //		pf.setSJRB(jrb6);
@@ -73,6 +88,11 @@ public class PuzzleRadioBox extends JPanel{
 		jrb9.addMouseListener(new PuzzleRadioBoxActionListener(pf));
 		jrb10.addMouseListener(new PuzzleRadioBoxActionListener(pf));
 		jrb11.addMouseListener(new PuzzleRadioBoxActionListener(pf));
+		jrb12.addMouseListener(new PuzzleRadioBoxActionListener(pf));
+		jrb13.addMouseListener(new PuzzleRadioBoxActionListener(pf));
+		jrb14.addMouseListener(new PuzzleRadioBoxActionListener(pf));
+		jrb15.addMouseListener(new PuzzleRadioBoxActionListener(pf));
+		jrb16.addMouseListener(new PuzzleRadioBoxActionListener(pf));
 	}
 
 }

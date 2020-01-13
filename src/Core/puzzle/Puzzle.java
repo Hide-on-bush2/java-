@@ -70,7 +70,7 @@ public class Puzzle extends JPanel implements MouseListener{
 					bufn=buf.getSubimage(width*j,height*i,width,height);
 					icon=new ImageIcon(bufn);
 				}else {
-					icon=new ImageIcon("background.jpg");
+					icon=new ImageIcon("src/images/background.jpg");
 					break;
 				}
 				pic[num]=new BlockImage(icon,num,width,height);
@@ -215,7 +215,7 @@ public class Puzzle extends JPanel implements MouseListener{
 		te.calCost();
 		Comparator<PQnode> cmp=new Comparator<PQnode>() {
 			public int compare(PQnode a,PQnode b) {
-				return a.cost-b.cost;
+				return a.cost+a.step-b.cost-b.step;//a.cost-b.cost;
 			}
 		};
 		PriorityQueue<PQnode> pq=new PriorityQueue<PQnode>(cmp);
@@ -330,7 +330,7 @@ public class Puzzle extends JPanel implements MouseListener{
 		void calCost() {
 			cost=0;
 			for(int i=0;i<num;i++)
-				cost+=Math.abs(dat[i]%col-i%col)*(col+1)+Math.abs(dat[i]/col-i/col)*(row+1);
+				cost+=Math.abs(dat[i]%col-i%col)*col+Math.abs(dat[i]/col-i/col)*row;
 		}
 		Long calHash() {
 			long hash1=0,hash2=0;

@@ -120,7 +120,7 @@ public class PuzzleFrame extends JFrame{
 		contentPane.add(buttonHint);
 		
 		prb=new PuzzleRadioBox(this);
-		prb.setBounds(570,145,45,250);
+		prb.setBounds(570,140,45,280);
 		contentPane.add(prb);
 		
 		JLabel labelDest=new JLabel("Ä¿±êÍ¼");
@@ -230,9 +230,9 @@ public class PuzzleFrame extends JFrame{
 		}
 		setGameStatus(2);
 	}
-	public static void main(String[] args) {
-		new PuzzleFrame();
-	}
+//	public static void main(String[] args) {
+//		new PuzzleFrame();
+//	}
 	int getGameStatus() {
 		return gameStatus;
 	}

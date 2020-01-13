@@ -26,6 +26,8 @@ public class IrregularPuzzle {
 		String temp = this.in.readUTF();
 		return temp;
 	}
+	
+	
 
 	public void say(String words)throws IOException{
 //		System.out.println(words);
