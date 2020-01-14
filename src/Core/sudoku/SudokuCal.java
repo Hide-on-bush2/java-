@@ -1,9 +1,15 @@
 package Core.sudoku;
 
-import java.util.Scanner;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+//import java.util.Scanner;
 //ÊäÈëÒ»ÐÐ81³¤¶ÈµÄ×Ö·û´®£¬±íÊ¾´ÓÉÏµ½ÏÂ´Ó×óµ½ÓÒÊý¶ÀÃ¿¸öÎ»ÖÃÒÑ¾­ÌîµÄÊý£¬0±íÊ¾Î´Ìî(ÎªÁËÓÃ»§ÓÑºÃ£¬Á¬ÐøÊäÈë81¸ö×Ö·û¼´¿É£¬²»ÐèÒªÓÃ¿Õ°×·û·Ö¸ô)
 //Èç¹ûÊý¶ÀÓÐ½â£¬Êä³öÌîºÃÊýµÄÊý¶À·½°¸
 public class SudokuCal {
+	
+	private DataOutputStream out = null;
+	private DataInputStream in = null;
 	private static int gx[]=new int[10];
 	private static int gy[]=new int[10];
 	private static int px[][]=new int[10][10];
@@ -12,12 +18,29 @@ public class SudokuCal {
 	private static int a[][]=new int[10][10];
 	private static int cnt=81;
 	private static boolean ok;
-	private static void init() {
+	
+	public SudokuCal(DataOutputStream out, DataInputStream in) {
+		this.out = out;
+		this.in = in;
+	}
+	
+	public String listen()throws IOException{
+		String temp = this.in.readUTF();
+		return temp;
+	}
+
+	public void say(String words)throws IOException{
+//		System.out.println(words);
+		this.out.writeUTF(words);
+		this.out.flush();
+	}
+
+	private  void init() throws IOException {
 		gx[1]=gx[2]=gx[3]=gy[1]=gy[2]=gy[3]=1;
 		gx[4]=gx[5]=gx[6]=gy[4]=gy[5]=gy[6]=2;
 		gx[7]=gx[8]=gx[9]=gy[7]=gy[8]=gy[9]=3;
-		Scanner scn=new Scanner(System.in);
-		String s=scn.next();
+//		Scanner scn=new Scanner(System.in);
+		String s=this.listen();
 		for(int i=1;i<=9;i++)
 			for(int j=1;j<=9;j++) {
 				px[i][j]=0;
@@ -36,15 +59,15 @@ public class SudokuCal {
 				cnt--;
 			}
 		ok=false;
-		scn.close();
+		
 	}
-	private static void printAnswer() {
+	private  void printAnswer() throws IOException {
 		for(int i=1;i<=9;i++) {
-			for(int j=1;j<=9;j++) System.out.print((char)('0'+a[i][j]));
-			System.out.println();
+			for(int j=1;j<=9;j++) this.say(Integer.toString(a[i][j]));
+			this.say("\n");
 		}
 	}
-	private static void dfs(int x,int y,int cnt) {
+	private  void dfs(int x,int y,int cnt) throws IOException {
 		if (cnt==0) {
 			ok=true;
 			printAnswer();
@@ -97,19 +120,19 @@ public class SudokuCal {
 				}
 		}
 	}
-	public static void run() {
+	public  void run() {
 		try {
 			init();
 			dfs(1,1,cnt);
 			if (!ok)
-				System.out.println("No Answer.");
+				this.say("No Answer.\n");
 		}catch(Exception err) {
 			err.printStackTrace();
 		}
 	}
-	public static void main(String args[]) {
-		run();
-	}
+//	public static void main(String args[]) {
+//		run();
+//	}
 }
 //Input:
 //000000000000601040700060003090205060008040900060109080500090002040308010006000700

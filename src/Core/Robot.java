@@ -8,6 +8,7 @@ import Core.Chemistry.*;
 import Core.PhysicsResistanceNetwork.*;
 import Core.irregularPuzzle.*;
 import Core.puzzle.*;
+import Core.sudoku.SudokuCal;
 
 import java.util.*;
 import java.net.*;
@@ -114,6 +115,12 @@ public class Robot{
 			this.say("Welcome to Puzzle.\n");
 			PuzzleFrame PF = new PuzzleFrame();
 			this.say("you have quitd Puzzle.\n");
+		}
+		else if(request.equals("/sudoku")) {
+			this.say("Welcome to Sudoku.\n");
+			SudokuCal SC = new SudokuCal(this.out, this.in);
+			SC.run();
+			this.say("you have quitd Sudoku.\n");
 		}
 		else{
 			this.say("I am sorry, but I can't understand what you have said...\n");

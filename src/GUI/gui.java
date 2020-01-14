@@ -87,7 +87,7 @@ public class gui extends JFrame{
             {
 				String message = client_content.getText();
                 client.send(message);
-                client_content.setText("");
+//                client_content.setText("");
             }
 		});
 		jp.add(button);

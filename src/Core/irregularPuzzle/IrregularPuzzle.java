@@ -77,7 +77,7 @@ public class IrregularPuzzle {
 				this.say(" ");
 			}
 //			System.out.println(a[i][w]);
-			this.say(Integer.toString(a[i][w]));
+			this.say(Integer.toString(a[i][w]) + "\n");
 		}
 	}
 	public void run() {
